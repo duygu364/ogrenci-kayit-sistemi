@@ -1,29 +1,41 @@
-# Öğrenci Kayıt Sistemi API
+# Öğrenci Kayıt Sistemi API (MySQL)
 
-Bu proje, Sunucu Tabanlı Programlama dersi için **MVC mimarisine** uygun olarak geliştirilmiş, Node.js ve Express tabanlı bir RESTful API projesidir.
+Bu proje, Sunucu Tabanlı Programlama dersi için **MVC mimarisine** uygun olarak geliştirilmiş, Node.js ve MySQL tabanlı bir RESTful API projesidir.
 
 ## 1. Projenin Amacı ve Senaryo
 Bu sistem, bir okulun öğrenci kayıtlarını yönetmek ve devamsızlık takibi yapmak için tasarlanmıştır.
 
+### Veritabanı Yapısı:
+Proje **İlişkisel Veritabanı (RDBMS)** kullanır ve 3 tablodan oluşur:
+* **Students:** Öğrenci bilgileri.
+* **Departments:** Bölüm bilgileri.
+* **Courses:** Ders bilgileri.
+
 ### İş Kuralları (Business Logic):
-Proje, veritabanı bütünlüğünü korumak için aşağıdaki özel senaryoları uygular:
-1.  **Devamsızlık Sınırı:** Bir öğrencinin devamsızlığı 20 günü aşmışsa, sisteme yeni devamsızlık girilemez ve API hata döner. (Öğrenci dersten kalmış sayılır).
-2.  **Not Geçerliliği:** Öğrenci notu 0'dan küçük veya 100'den büyük girilemez.
+1.  **Devamsızlık Sınırı:** Bir öğrencinin devamsızlığı 20 günü aşmışsa, sisteme yeni devamsızlık girilemez (Hata döner).
+2.  **Not Geçerliliği:** Öğrenci notu 0-100 aralığı dışında girilemez.
 
 ## 2. Kurulum Adımları
-Projeyi kendi bilgisayarınızda çalıştırmak için:
 
-1.  Bu klasörü indirin.
-2.  Terminali açıp gerekli paketleri yükleyin:
+1.  Proje klasörünü indirin ve terminalde paketleri yükleyin:
     ```bash
     npm install
     ```
-3.  Ana dizinde `.env` dosyası oluşturun ve içine şunları yazın:
+2.  **Veritabanı Kurulumu:**
+    * MAMP veya XAMPP sunucusunu başlatın.
+    * `phpMyAdmin` arayüzüne gidin.
+    * `SQL` sekmesine proje içindeki veritabanı kodlarını yapıştırarak tabloları oluşturun.
+3.  **Ayar Dosyası:**
+    * `.env.example` dosyasının adını `.env` olarak değiştirin veya yeni bir `.env` dosyası oluşturup içine veritabanı bilgilerinizi girin:
     ```text
     PORT=3000
-    MONGO_URI=mongodb://127.0.0.1:27017/okulDB
+    DB_HOST=localhost
+    DB_USER=root
+    DB_PASSWORD=root
+    DB_NAME=okulDB
+    DB_PORT=8889
     ```
-4.  Sunucuyu başlatın:
+4.  **Başlatma:**
     ```bash
     node app.js
     ```
@@ -32,7 +44,7 @@ Projeyi kendi bilgisayarınızda çalıştırmak için:
 
 | Metot | URL | Açıklama |
 |-------|-----|----------|
-| GET | `/api/students/` | Tüm öğrencileri listeler. |
-| POST | `/api/students/add` | Yeni öğrenci kaydeder. |
+| GET | `/api/students/` | Tüm öğrencileri (Bölüm bilgisiyle) listeler. |
+| POST | `/api/students/add` | Yeni öğrenci ve bölümünü kaydeder. |
 | DELETE| `/api/students/:id` | ID'si verilen öğrenciyi siler. |
 | POST | `/api/students/devamsizlik/:id` | Öğrencinin devamsızlığını 1 artırır. |

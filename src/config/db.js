@@ -1,13 +1,17 @@
-const mongoose = require('mongoose');
+const mysql = require('mysql2');
+const dotenv = require('dotenv');
 
-const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log('Veritabanına Bağlandı! ✅');
-  } catch (err) {
-    console.error('Bağlantı Hatası ❌:', err);
-    process.exit(1);
-  }
-};
+// .env dosyasındaki ayarları yükle
+dotenv.config();
 
-module.exports = connectDB;
+const pool = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT
+});
+
+console.log(`MySQL Veritabanına Bağlandı! (${process.env.DB_NAME}) ✅`);
+
+module.exports = pool.promise();
